@@ -30,7 +30,6 @@ public:
 private:
     RibbonGalleryGroup *m_group;
 };
-
 /**
  * RibbonGalleryGroup 对应的model
  */

@@ -46,7 +46,7 @@ public:
     void setAction(QAction* action);
     QAction* action();
 private:
-    friend class SARibbonGalleryGroupModel;
+    friend class RibbonGalleryGroupModel;
     QMap<int,QVariant> m_datas;
     Qt::ItemFlags m_flsgs;
     QAction* m_action;

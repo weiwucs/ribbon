@@ -1,31 +1,43 @@
 #include <QApplication>
-#include <QFormLayout>
 #include <QtGlobal>
-#include <QObject>
-#include <QSlider>
-#include <QSpinBox>
-#include <QWidget>
-#include "FramelessHelper.h"
-#include "RibbonGallery.h"
 #include "RibbonQuickAccessBar.h"
-#include "RibbonBar.h"
-#include "RibbonMainWindow.h"
 #include "mainwindow.h"
 
-#define PRINT_COST(ElapsedTimer, LastTime, STR) \
-    do{ \
-        int ___TMP_INT = ElapsedTimer.elapsed(); \
-        qDebug() << STR << ___TMP_INT - LastTime << "(" << ___TMP_INT << ")"; \
-        LastTime = ___TMP_INT; \
-    }while(0)
+void log_out_put(QtMsgType type, const QMessageLogContext& context, const QString& msg){
+    QByteArray localMsg = msg.toLocal8Bit();
+    switch (type){
+        case QtDebugMsg:
+            fprintf(stdout, "[Debug] %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+            break;
+        case QtInfoMsg:
+            fprintf(stdout, "[Info] %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+            break;
+
+        case QtWarningMsg:
+            fprintf(stdout, "[Warning] %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+            break;
+
+        case QtCriticalMsg:
+            fprintf(stdout, "[Critical] %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+            break;
+
+        case QtFatalMsg:
+            fprintf(stdout, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+            abort();
+    }
+#ifndef QT_NO_DEBUG_OUTPUT
+    fflush(stdout);
+#endif
+}
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     QElapsedTimer cost;
-    int lastTimes = 0;
+    qInstallMessageHandler(log_out_put);
     cost.start();
     mainwindow mw;
+    qDebug() <<"window build cost:"<<cost.elapsed()<<" ms";
     mw.show();
 
     return app.exec();
